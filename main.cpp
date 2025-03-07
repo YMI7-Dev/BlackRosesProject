@@ -186,11 +186,9 @@ public:
     template <typename T>
     range<T> RangeStats(T stats, float rarity, int level){
         range<T> result;
-        float prog = 1 + (level * 0.05);//level progression 5% per level
-        float base = stats * prog;
-        float variable = base * 0.05;
-        float VariantMin = (base * rarity) - variable;
-        float VariantMax = (base * rarity) + variable;
+        float variable = stats * 0.1;
+        float VariantMin = stats - variable;
+        float VariantMax = stats + variable;
         result.MIN = SingleStats<T>(VariantMin, rarity, level);
         result.MAX = SingleStats<T>(VariantMax, rarity, level);
 
@@ -2598,7 +2596,7 @@ public:
         int DodgeDist = DistReal<int>(Enemy.DODGE_EN.MIN, Enemy.DODGE_EN.MAX);
         if(CURSE_CHANCE > DodgeDist){
             int Damage = DistReal<int>(CURSE_DMG.MIN, CURSE_DMG.MAX);
-            cout << "\n[YOU DID CURSE DAMAGE[" << Damage << "]" << endl;
+            cout << "\n[YOU DID CURSE DAMAGE]:[" << Damage << "]" << endl;
             return Damage;
         }
         else{
@@ -2725,8 +2723,8 @@ public:
             }
             else{
                 for(int i = 1; i <= A.Times_AB; ++i){
-                    printSlowly("\n[YOU HIT THE ENEMY WITH: " + A.Name_AB + "]", 60);
-                    printSlowly("\n[DAMAGE: " + to_string(FinalDamage) + "]\n", 60);
+                    printSlowly("\n[YOU HIT THE ENEMY WITH: " + A.Name_AB + "]", 30);
+                    printSlowly("\n[DAMAGE: " + to_string(FinalDamage) + "]\n", 30);
                     E.HP_EN.MIN -= FinalDamage;
                 }
 
