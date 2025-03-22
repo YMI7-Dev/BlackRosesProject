@@ -301,17 +301,15 @@ public:
         };
 
         vector<parameters> CURSE{
-        {"Inexistence", 3, 26},
-        {"Inocence", 5, 25},
-        {"Schizophrenia", 10, 24},
-        {"Suicide", 14, 23},
-        {"Borderline", 20, 22},
-        {"Social Anxiety", 26, 21},
-        {"Psychosis", 28, 20},
-        {"Bipolar", 32, 19},
-        {"Panic", 36, 18},
-        {"Anxiety", 40, 17},
-        {"Depression", 42, 16}
+        {"Inexistence", 3, 10},
+        {"Schizophrenia", 10, 9},
+        {"Borderline", 20, 8},
+        {"Social Anxiety", 26, 7},
+        {"Psychosis", 28, 6},
+        {"Bipolar", 32, 5},
+        {"Panic", 36, 4},
+        {"Anxiety", 40, 3},
+        {"Depression", 42, 2}
         };
 
         vector<int> Curses;
@@ -482,7 +480,6 @@ public:
     string Name_AB;
     array<string, 2> Type_AB;
     string Rarity_AB;
-    string Evoke_AB;
     float DMG_AB;
     float MAG_AB;
     float Heal_AB;
@@ -490,12 +487,12 @@ public:
     int AP_Cost;
     int MP_Cost;
 
-    ability(): Name_AB("Empty"), Type_AB{"None", "None"}, Rarity_AB("None"), Evoke_AB("None"), DMG_AB(0), MAG_AB(0),
+    ability(): Name_AB("Empty"), Type_AB{"None", "None"}, Rarity_AB("None"), DMG_AB(0), MAG_AB(0),
     Heal_AB(0), Times_AB(0), AP_Cost(0), MP_Cost(0) {}
 
-    ability(string nam, array<string, 2> type, string rar, string evo, float dmg,
+    ability(string nam, array<string, 2> type, string rar, float dmg,
     float mag, float heal, int time, int ap, int mp):
-    Name_AB(nam), Type_AB(type), Rarity_AB(rar), Evoke_AB(evo), DMG_AB(dmg), MAG_AB(mag),
+    Name_AB(nam), Type_AB(type), Rarity_AB(rar), DMG_AB(dmg), MAG_AB(mag),
     Heal_AB(heal), Times_AB(time), AP_Cost(ap), MP_Cost(mp) {}
 
     void AbilityInfo(){
@@ -509,7 +506,6 @@ public:
         cout << "[Times:" << Times_AB << "]" << endl;
         cout << "[AP Cost:" << AP_Cost << "]" << endl;
         cout << "[MP Cost:" << MP_Cost << "]" << endl;
-        cout << "[Evokation:" << Evoke_AB << "]" << endl;
         cout << "[ABILITY TYPE]:" << endl;
         cout << "[Class:" << Type_AB[0] << "]" << endl;
         cout << "[Type:" << Type_AB[1] << "]\n" << endl;
@@ -589,7 +585,7 @@ public:
         cout << "[DEF:" << DEF_GL.MIN << "/" << DEF_GL.MAX << "]" << endl;
         cout << "[CRIT:" << Percent(CRIT_GL) << "]" << endl;
         cout << "[PREC:" << PREC_GL.MIN << "/" << PREC_GL.MAX << "]" <<  endl;
-        cout << "[DODGE:" << DODGE_GL.MIN << "/" << PREC_GL.MAX << "]" <<  endl;
+        cout << "[DODGE:" << DODGE_GL.MIN << "/" << DODGE_GL.MAX << "]" <<  endl;
         cout << "[LV:" << LV_GL << "]" << endl;
         cout << "[VALUE:" << Value_GL << " SOULS\n" << endl;
 
@@ -631,7 +627,7 @@ public:
         cout << "[DEF:" << DEF_A.MIN << "/" << DEF_A.MAX << "]" << endl;
         cout << "[ATK:" << ATK_A.MIN << "/" << ATK_A.MAX << "]" << endl;
         cout << "[MAG:" << MAG_A.MIN << "/" << MAG_A.MAX << "]" << endl;
-        cout << "[DEF:" << DODGE_A.MIN << "/" << DODGE_A.MAX << "]" << endl;
+        cout << "[DODGE:" << DODGE_A.MIN << "/" << DODGE_A.MAX << "]" << endl;
         cout << "[AP:" << AP_A  << "]" << endl;
         cout << "[MP:" << MP_A  << "]" << endl;
         cout << "[LV:" << LV_A << "]" << endl;
@@ -760,10 +756,10 @@ public:
     int Potion;
     int Bones;
     int Metal;
-    int Stars;
+    int Skull;
 
     itens(): Souls(0), Potion(0), Bones(0),
-    Metal(0), Stars(0) {}
+    Metal(0), Skull(0) {}
 
 };
 
@@ -971,7 +967,6 @@ public:
     range<int> DODGE;
     range<int> AP;
     range<int> MP;
-    int Points;
     int LV;
     atributes Atributes;
     stats Stats;
@@ -1013,7 +1008,8 @@ public:
         cout << "[LV:" << LV << "]\n" << endl;
         cout << "[EXP:" << Soul.S_EXP.MIN << "]" << endl;
         cout << "[NEXT LV:" << Soul.S_EXP.MAX << "]" << endl;
-
+        cout << "[POINTS:" << Atributes.POINTS << "]" << endl;
+        cout << "[BONES:" << Itens.Bones << "]" << endl;
               equipment& eq = Equip;
               weapon& weap = eq.Weapon;
               armor& arm = eq.Armor;
@@ -1034,7 +1030,7 @@ public:
     void CreateNeckle(necklace& RandNeckle);
     void CreateGun(gun& Firearm);
     void CreateSoul(soul& CharSoul);
-    void CreateAbility(ability& RandAbility);
+    void CreateAbility(ability& RandAbility, int type);
     void EquipFound();
     void EquipManager();
     void SwitchEquip();
@@ -1049,8 +1045,9 @@ public:
     void CharacterMenu();
     void TheWorld();
     void Merchant();
-    void FoundEnemy(int level);
-    void Battle(enemy& E);
+    void FoundEnemy();
+    void DeadReset();
+    bool Battle(enemy& E);
     void ShowAbility(int abi);
     void AbilityManeger();
     void PointsDist();
@@ -1123,7 +1120,7 @@ public:
         HP.MIN = HP.MAX;
         AP.MIN = AP.MAX;
         MP.MIN = MP.MAX;
-        cout << "[SUCSSEFULLY RECOVERED]" << endl;
+        cout << "\n[SUCSSEFULLY RECOVERED]\n" << endl;
     }
 
     void character::UpdateAtributes(){
@@ -1148,8 +1145,8 @@ public:
     void character::LevelUp(){
     soul& S = Soul;
         while(S.S_EXP.MIN >= S.S_EXP.MAX){
-            Points += 5;
-            float next = S.S_EXP.MAX * 1.35;
+            Atributes.POINTS += 5;
+            float next = S.S_EXP.MAX * 1.30;
             S.S_EXP.MAX = static_cast<int>(ceil(next));
             ++LV;
             cout << "[LEVEL UP! ->" << LV << "]" << endl;
@@ -1160,14 +1157,14 @@ public:
     atributes& At = Atributes;
         do{
         cout << "[POINTS DISTRIBUTION]" << endl;
-        cout << "[POINTS:" << Points << "]" << endl;
+        cout << "[POINTS:" << At.POINTS << "]" << endl;
         cout << "[1].[DISTRIBUTE]" << endl;
         cout << "[2].[LEAVE]" << endl;
         int dist = VerifyCin(1, 2);
 
         if(dist == 1){
             do{
-            cout << "\n[POINTS:" << Points << "]" << endl;
+            cout << "\n[POINTS:" << At.POINTS << "]" << endl;
             cout << "[1].[RES][" << At.RES << "]" << endl;
             cout << "[2].[STR][" << At.STR << "]" << endl;
             cout << "[3].[WIS][" << At.WIS << "]" << endl;
@@ -1180,31 +1177,31 @@ public:
                 break;
             }
 
-            if(Points > 0){
+            if(At.POINTS > 0){
                 switch(pt){
                     case 1:
                         ++At.RES;
-                        --Points;
+                        --At.POINTS;
                         cout << "[RES UP!]" << endl;
                         break;
                     case 2:
                         ++At.STR;
-                        --Points;
+                        --At.POINTS;
                         cout << "[STR UP!]" << endl;
                         break;
                     case 3:
                         ++At.WIS;
-                        --Points;
+                        --At.POINTS;
                         cout << "[WIS UP!]" << endl;
                         break;
                     case 4:
                         ++At.DEX;
-                        --Points;
+                        --At.POINTS;
                         cout << "[DEX UP!]" << endl;
                         break;
                     case 5:
                         ++At.AGL;
-                        --Points;
+                        --At.POINTS;
                         cout << "[AGL UP!]" << endl;
                         break;
                 }
@@ -1222,6 +1219,7 @@ public:
         }
 
         }while(true);
+        UpdateAtributes();
     }
 
     void character::WeaponInvDisplay(){
@@ -1588,7 +1586,7 @@ public:
         S.S_MP = SingleStats<int>(DetMP, 1, LVX);
         S.S_LV = LVX;
         S.S_EXP.MIN = 0;
-        S.S_EXP.MAX = 120 * (1 + (LVX * 0.05));
+        S.S_EXP.MAX = 120 * (LVX * 1.30);
     }
 
     void character::CreateGun(gun& Firearm){
@@ -1808,96 +1806,96 @@ public:
         };
         //(name, atk, mag, crit, luck, prec)
         vector<vector<vector<stats>>> Additional{//3 indexs per weapon, 4 weapon types per classes
-        {{{"Agile", 8, 2, 0.04, 5, 6},//blade, melee begin
+        {{{"Agile", 8, 0, 0.04, 5, 6},//blade, melee begin
         {"Great", 13, 0, -0.02, 2, 3},
         {"Heavy", 10, 0, 0.02, 4, 4}},
-        {{"Agile", 8, 0, 0.04, 7, 10},//dagger
-        {"Bloody", 9, 0, 0.05, 6, 9},
-        {"Sanguinare", 8, 0, 0.06, 6, 9}},
+        {{"Agile", 8, 0, 0.04, 5, 6},//dagger
+        {"Bloody", 7, 0, 0.05, 5, 6},
+        {"Sanguinare", 6, 0, 0.06, 6, 5}},
         {{"Heavy", 10, 0, 0.00, 4, 3},//blunt
-        {"Great", 13, 0, -0.02, 2, 3},
-        {"Spiked", 14, -3, -0.02, 2, 2}},
-        {{"Pointed", 8, 0, 0.02, 5, 7},//perfuration
-        {"Venomous", 7, 2, 0.03, 5, 7},
-        {"Great", 10, 0, -0.02, 7, 7}}},//melee end
-        {{{"Burning", 0, 10, 0.02, 4, 8},//wand, magic begin
-        {"Deadly", 0, 11, 0.03, 5, 8},
-        {"Crooked", 0, 13, 0.05, 6, 8}},
-        {{"Rotten", 3, 10, 0.02, 3, 7},//staff
-        {"Curved", 4, 10, 0.01, 3, 6},
-        {"Satanic", 3, 12, 0.00, 2, 7}},
+        {"Great", 13, 0, -0.01, 2, 3},
+        {"Spiked", 14, -2, -0.02, 2, 3}},
+        {{"Pointed", 8, 0, 0.02, 5, 5},//perfuration
+        {"Sharped", 7, 0, 0.03, 5, 5},
+        {"Great", 10, 0, -0.02, 4, 4}}},//melee end
+        {{{"Burning", 0, 8, 0.02, 4, 6},//wand, magic begin
+        {"Deadly", 0, 7, 0.03, 5, 6},
+        {"Crooked", 0, 6, 0.05, 6, 5}},
+        {{"Rotten", 0, 13, 0.02, 3, 4},//staff
+        {"Curved", -1, 13, 0.01, 3, 3},
+        {"Satanic", -2, 14, 0.00, 2, 3}},
         {{"Wicked", 0, 7, 0.06, 5, 3},//idoll
         {"Negative", 0, 6, 0.07, 6, 3},
         {"Blasphemous", 0, 7, 0.05, 6, 3}},
-        {{"Burt", 0, 8, 0.03, 5, 5},//Magic book
-        {"Diabolic", 0, 10, 0.02, 5, 5},
-        {"Unholy", 0, 9, 0.04, 5, 5}}},//magic end
+        {{"Burt", 0, 7, 0.03, 5, 5},//Magic book
+        {"Diabolic", 0, 9, 0.02, 5, 5},
+        {"Unholy", 0, 8, 0.04, 5, 5}}},//magic end
         {{{"Angelical", 4, 5, 0.04, 2, 6},//magic blade, enchanted begin
         {"Curved", 5, 4, 0.03, 3, 6},
         {"Satanic", 5, 5, 0.02, 4, 6}},
-        {{"Cursed", 7, 2, 0.05, 6, 8},//magic dagger
-        {"Obscure", 7, 3, 0.06, 6, 8},
-        {"Sacrificial", 7, 2, 0.05, 6, 8}},
-        {{"Cracked", 11, 2, -0.01, 2, 4},//magic blunt
-        {"Cruel", 10, 3, 0.00, 2, 4},
-        {"Evil", 7, 6, -0.02, 1, 4}},
-        {{"Burt", 2, 10, 0.04, 5, 6},//orb
-        {"Biabolic", 3, 11, 0.03, 6, 6},
-        {"Unholy", 5, 9, 0.02, 5, 6}}}
+        {{"Cursed", 4, 2, 0.05, 6, 8},//magic dagger
+        {"Obscure", 4, 3, 0.06, 6, 8},
+        {"Sacrificial", 5, 2, 0.05, 6, 8}},
+        {{"Cracked", 9, 2, -0.01, 2, 4},//magic blunt
+        {"Cruel", 8, 3, 0.00, 2, 4},
+        {"Evil", 5, 6, -0.02, 1, 4}},
+        {{"Burt", 2, 7, 0.04, 5, 6},//orb
+        {"Biabolic", 4, 6, 0.03, 6, 6},
+        {"Unholy", 5, 5, 0.02, 5, 6}}}
         };
         //(name, atk, mag, crit, luck, prec)
         vector<vector<vector<stats>>> Weapon{//3 indexs per weapon, 4 weapon types per classes
-        {{{"Sword", 8, 0, 0.04, 5, 5},//blade, melee begin
-        {"Schimitar", 9, 0, 0.03, 6, 5},
-        {"Axe", 10, 0, 0.03, 5, 4}},
-        {{"Daggers", 6, 0, 0.06, 5, 7},//dagger
-        {"Knives", 7, 0, 0.04, 6, 7},
-        {"Kunais", 7, 0, 0.05, 6, 7}},
-        {{"Hammer", 12, -4, 0.02, 2, 4},//blunt
-        {"Mace", 11, 0, 0.02, 2, 3},
-        {"Zheihander", 14, -6, -0.01, 2, 3}},
-        {{"Spear", 10, 0, 0.03, 5, 6},//perfuration
-        {"Lance", 9, 0, 0.04, 6, 6},
-        {"Long Sword", 12, -1, 0.02, 4, 6}}},//melee end
-        {{{"Wand", 0, 8, 0.05, 5, 6},//wand, magic begin
-        {"Bone", 0, 9, 0.04, 4, 6},
-        {"Finger", 0, 10, 0.03, 6, 6}},
-        {{"Staff", 2, 8, 0.01, 3, 5},//staff
-        {"Guitar", 1, 9, 0.02, 4, 5},
-        {"Pole", 3, 8, 0.00, 6, 5}},
-        {{"Idoll", 0, 8, 0.05, 4, 7},//idoll
-        {"Mandragora", 0, 7, 0.06, 4, 7},
-        {"Doll", 0, 9, 0.04, 4, 7}},
-        {{"Bible", 0, 12, -0.01, 7, 5},//Magic book
-        {"Torav", 0, 13, -0.02, 7, 5},
-        {"Alcooram", 0, 14, -0.02, 8, 4}}},//magic end
-        {{{"Excalibur", 6, 6, 0.04, 4, 6},//magic blade, enchanted begin
-        {"Sawazaki", 8, 4, 0.03, 4, 6},
-        {"Hirudo", 6, 8, 0.03, 3, 7}},
-        {{"Kamas", 4, 3, 0.05, 6, 8},//magic dagger
-        {"Kunais", 3, 4, 0.06, 6, 9},
-        {"Kaichis", 3, 5, 0.07, 6, 8}},
-        {{"Thor Hammer", 14, 0, -0.01, 2, 4},//magic blunt
-        {"Morning Star", 15, 0, 0.00, 3, 4},
-        {"Elven Smasher", 10, 0, -0.02, 2, 5}},
-        {{"Orb", 6, 6, 0.04, 3, 10},//orb
-        {"Sphere", 5, 7, 0.03, 3, 11},
-        {"Globe", 7, 5, 0.04, 3, 9}}}
+        {{{"Sword", 4, 0, 0.03, 3, 2},//blade, melee begin
+        {"Schimitar", 4, 0, 0.02, 2, 3},
+        {"Axe", 5, 0, 0.02, 3, 2}},
+        {{"Daggers", 3, 0, 0.05, 3, 4},//dagger
+        {"Knives", 4, 0, 0.03, 4, 4},
+        {"Kunais", 4, 0, 0.04, 4, 4}},
+        {{"Hammer", 6, -2, 0.02, 2, 3},//blunt
+        {"Mace", 6, 0, 0.02, 2, 2},
+        {"Zheihander", 7, -3, -0.01, 2, 2}},
+        {{"Spear", 5, 0, 0.02, 3, 3},//perfuration
+        {"Lance", 4, 0, 0.03, 3, 3},
+        {"Long Sword", 6, -1, 0.02, 3, 3}}},//melee end
+        {{{"Wand", 0, 4, 0.04, 3, 3},//wand, magic begin
+        {"Bone", 0, 5, 0.03, 2, 3},
+        {"Finger", 0, 6, 0.02, 2, 3}},
+        {{"Staff", 0, 6, 0.01, 2, 2},//staff
+        {"Guitar", 0, 7, 0.02, 3, 2},
+        {"Pole", 0, 6, 0.01, 2, 2}},
+        {{"Idoll", 0, 4, 0.04, 3, 5},//idoll
+        {"Mandragora", 0, 3, 0.05, 2, 5},
+        {"Doll", 0, 5, 0.03, 4, 5}},
+        {{"Bible", 0, 6, -0.01, 5, 4},//Magic book
+        {"Torav", 0, 7, -0.02, 5, 4},
+        {"Alcooram", 0, 7, -0.02, 5, 4}}},//magic end
+        {{{"Excalibur", 3, 4, 0.03, 4, 4},//magic blade, enchanted begin
+        {"Sawazaki", 4, 3, 0.02, 4, 4},
+        {"Hirudo", 6, 2, 0.02, 3, 4}},
+        {{"Kamas", 4, 3, 0.04, 6, 5},//magic dagger
+        {"Kunais", 3, 4, 0.05, 6, 6},
+        {"Kaichis", 3, 5, 0.06, 6, 5}},
+        {{"Thor Hammer", 6, 3, -0.01, 2, 2},//magic blunt
+        {"Morning Star", 7, 2, 0.00, 3, 2},
+        {"Elven Smasher", 5, 4, -0.02, 2, 3}},
+        {{"Orb", 4, 6, 0.03, 3, 5},//orb
+        {"Sphere", 3, 7, 0.03, 3, 6},
+        {"Globe", 5, 5, 0.03, 3, 4}}}
         };
         //(name, atk, mag, crit, luck, prec)
         vector<vector<stats>> Sufix{
-        {{"from North", 16, 3, 0.04, 4, 20},//melee
-        {"of Depression", 20, 2, 0.03, 3, 16},
-        {"of Pychos", 15, 5, 0.04, 3, 18},
-        {"of Canibals", 15, 2, 0.06, 4, 18}},
-        {{"from Hell", 0, 15, 0.02, 3, 20},//magical
-        {"from the Valley", 2, 15, 0.04, 3, 16},
-        {"of Sadists", 0, 20, 0.03, 4, 18},
-        {"of Satan", 5, 16, 0.02, 3, 16}},
-        {{"of Samael", 10, 12, 0.03, 3, 20},//enchanted
-        {"of Lilith", 8, 13, 0.03, 4, 18},
-        {"of Uriel", 11, 10, 0.04, 4, 22},
-        {"of Baal", 10, 12, 0.06, 6, 12}}
+        {{"from North", 3, 0, 0.03, 3, 4},//melee
+        {"of Depression", 4, 0, 0.02, 4, 3},
+        {"of Pychos", 5, 0, 0.01, 3, 4},
+        {"of Canibals", 2, 0, 0.04, 2, 4}},
+        {{"from Hell", 0, 2, 0.04, 2, 3},//magical
+        {"from the Valley", 0, 3, 0.02, 3, 4},
+        {"of Sadists", 0, 4, 0.02, 3, 4},
+        {"of Satan", 0, 5, 0.01, 3, 4}},
+        {{"of Samael", 2, 3, 0.02, 3, 4},//enchanted
+        {"of Lilith", 1, 3, 0.03, 4, 4},
+        {"of Uriel", 3, 2, 0.01, 4, 4},
+        {"of Baal", 2, 1, 0.04, 4, 3}}
         };
         //(name, atk, mag, crit, luck, prec)
         int WeaponClass = DistReal<int>(0, 2);
@@ -1965,7 +1963,7 @@ public:
         {"Fur Armor", 0, 0, 6, 3, 9, 5, 5},
         {"Silk Armor", 0, 0, 5, 3, 9, 5, 5}},
         {{"Mithril Armor", 0, 0, 8, 6, 6, 6, 3},//medium
-        {"Bones Armor", 1, 0, 7, 6, 6, 6, 3},
+        {"Bones Armor", 0, 0, 7, 6, 6, 6, 3},
         {"Bronze Armor", 0, 0, 7, 6, 6, 7, 3}},
         {{"Scales Armor", 0, 0, 10, 9, 3, 10, 1},// heavy
         {"Demon Armor", 0, 0, 10, 9, 3, 9, 1},
@@ -1990,10 +1988,10 @@ public:
         {"From The Hole", 0, 0, 10, 9, 12, -3}},
         {{"of Satan", 0, 9, 1, 7, 0, 9},//robes
         {"of Massacre", 0, 9, 2, 7, 0, 9},
-        {"From Umbral", 0, 10, -1, 8, 0, 9}},
-        {{"of Ocultism", 9, 0, 5, 4, 9, 0},//attack
-        {"of Cannibalism", 8, 0, 5, 5, 9, 0},
-        {"of Sodomy", 9, 0, 5, 4, 9, 0}}
+        {"From Umbral", 0, 10, 1, 8, 0, 9}},
+        {{"of Ocultism", 4, 0, 5, 4, 9, 0},//attack
+        {"of Cannibalism", 3, 0, 5, 5, 9, 0},
+        {"of Sodomy", 5, 0, 5, 4, 9, 0}}
         };
 
         int ArmorType = DistReal<int>(0, Types.size()-1);
@@ -2049,16 +2047,16 @@ public:
 
         LVX = LvDet(LV);// randon level based on character's LV
         vector<vector<stats>> PREFIX{
-        {{"Ragades", 5, 1, 5, 0.04, 7, 7},//light gloves
-        {"Bloody", 3, 1, 5, 0.05, 6, 6}},
-        {{"Hardened", 5, 0, 7, 0.03, 5, 5},//medium gloves
-        {"Bones", 3, 5, 7, 0.02, 6, 6}},
-        {{"Iron", 6, 0, 10, -0.01, 4, 3},//heavy gloves
-        {"Steel", 6, 0, 10, -0.02, 4, 3}},
-        {{"Sharped", 10, -1, 15, 0.05, 5, 5},//atack gloves
-        {"Pointed", 12, -2, 15, 0.04, 6, 4}},
-        {{"Enchanted", -1, 10, 0, 0.02, 6, 5},//magic gloves
-        {"Cursed", -2, 12, 5, 0.02, 5, 6}}
+        {{"Ragades", 1, 3, 4, 0.04, 5, 5},//light gloves
+        {"Bloody", 3, 1, 4, 0.04, 5, 5}},
+        {{"Hardened", 3, 1, 6, 0.02, 4, 4},//medium gloves
+        {"Bones", 1, 3, 6, 0.02, 4, 4}},
+        {{"Iron", 3, 1, 8, -0.01, 3, 3},//heavy gloves
+        {"Steel", 1, 3, 8, -0.01, 3, 3}},
+        {{"Sharped", 4, -1, 2, 0.04, 5, 4},//atack gloves
+        {"Pointed", 5, -2, 2, 0.04, 4, 5}},
+        {{"Enchanted", -1, 4, 2, 0.02, 4, 5},//magic gloves
+        {"Cursed", -2, 5, 2, 0.02, 5, 4}}
         };
         //{name, atk, mag, def, crit, prec, dodge}
         vector<string> TYPES{
@@ -2068,42 +2066,42 @@ public:
         "Atack Gloves",
         "Magic Gloves"
         };
-
+        //{name, atk, mag, def, crit, prec, dodge}
         vector<vector<stats>> MATERIAL{
-        {{"Cotton",10, 2, 5, 0.05, 13, 14},//light
-        {"Skin", 9, 2, 7, 0.06, 12, 13},
-        {"Silk", 11, 0, 6, 0.05, 15, 12}},
-        {{"Mithril", 12, 0, 14, 0.03, 10, 9},//medium
-        {"Chain Mail", 13, 1, 13, 0.03, 9, 11},
-        {"Bronze", 12, 2, 13, 0.02, 11, 11}},
-        {{"Scales", 10, -1, 18, 0.00, 5, 6},// heavy
-        {"Demon", 10, 1, 19, 0.00, 6, 6},
-        {"Drake", 7, 7, 17, 0.00, 7, 7}},
-        {{"Abandoned", 15, 0, 12, 0.05, 10, 10},//atack
-        {"Destruction", 15, -1, 12, 0.06, 9, 11},
-        {"Stiched Skin", 14, 2, 12, 0.06, 12, 10}},
-        {{"Goat Head", 2, 15, 5, 0.04, 12, 9},//magic
-        {"Teeth", 3, 15, 5, 0.05, 11, 11},
-        {"Ribs", -1, 17, 7, 0.04, 10, 10}}
+        {{"Cotton", 0, 0, 5, 0.04, 5, 5},//light
+        {"Skin", 0, 0, 7, 0.05, 5, 5},
+        {"Silk", 0, 0, 6, 0.04, 5, 5}},
+        {{"Mithril", 0, 0, 8, 0.03, 3, 3},//medium
+        {"Chain Mail", 0, 0, 9, 0.03, 3, 3},
+        {"Bronze", 0, 0, 10, 0.02, 3, 3}},
+        {{"Scales", 0, 0, 13, 0.01, 1, 1},// heavy
+        {"Demon", 0, 0, 14, 0.00, 1, 1},
+        {"Drake", 0, 0, 15, -0.01, 1, 1}},
+        {{"Abandoned", 7, 0, 2, 0.03, 4, 4},//atack
+        {"Destruction", 6, 0, 4, 0.04, 4, 4},
+        {"Stiched Skin", 8, 0, 3, 0.03, 4, 4}},
+        {{"Goat Head", 0, 7, 3, 0.03, 4, 4},//magic
+        {"Teeth", 0, 6, 4, 0.04, 4, 4},
+        {"Ribs", 0, 8, 2, 0.03, 4, 4}}
         };
 
         vector<stats> EQUIPMENT{
-        {"Gloves", 3, 3, 3, 0.04, 9, 9},
-        {"Bracelets", 6, 0, 6, 0.03, 6, 6},
-        {"Mitten", 9, 1, 9, 0.02, 3, 4},
-        {"Knuckes", 12, 0, 6, 0.05, 4, 9},
-        {"Magic Gloves", 0, 12, 6, 0.05, 9, 6}
+        {"Gloves", 3, 3, 3, 0.02, 7, 7},
+        {"Bracelets", 4, 2, 6, 0.02, 5, 5},
+        {"Mitten", 5, 1, 9, 0.02, 3, 3},
+        {"Knuckes", 7, 0, 2, 0.04, 4, 4},
+        {"Magic Gloves", 0, 7, 2, 0.04, 4, 4}
         };
 
         vector<stats> SUFIX{
-        {"of Slavery", 5, 1, 10, 0.03, 5, 5},
-        {"of Obscuriry", 4, 2, 9, 0.04, 6, 5},
-        {"of Polution", 5, 1, 9, 0.04, 5, 6},
-        {"of Pilgrims", 5, 1, 13, 0.02, 4, 4},
-        {"from Depths", 0, 5, 9, 0.03, 4, 5},
-        {"of Satanism", 5, 10, 2, 0.03, 6, 2},
-        {"of Depravation", 0, 9, 10, 0.06, 2, 6},
-        {"of Plagues", 5, 11, 0, 0.03, 6, 6}
+        {"of Slavery", 2, 3, 5, 0.01, 5, 4},
+        {"of Obscuriry", 3, 2, 5, 0.01, 4, 5},
+        {"of Polution", 3, 1, 3, 0.02, 4, 4},
+        {"of Pilgrims", 3, 1, 3, 0.02, 4, 5},
+        {"from Depths", 1, 5, 5, 0.01, 5, 5},
+        {"of Satanism", 5, 2, 7, 0.00, 4, 4},
+        {"of Depravation", 2, 3, 4, 0.02, 3, 3},
+        {"of Plagues", 5, 1, 5, 0.01, 4, 6}
         };
         //(name, atk, mag, def, crit, prec, dodge)
         int GloveType = DistReal<int>(0, TYPES.size()-1);
@@ -2154,55 +2152,55 @@ public:
         };
 
         vector<neckset> Type{
-        {"Health", 15, 3, 3, 5},
-        {"Attack", 3, 15, 3, 5},
-        {"Magic", 3, 3, 15, 5},
-        {"Enchanted", 3, 9, 9, 5},
-        {"Lucky", 3, 3, 3, 10}
+        {"Health", 5, 0, 0, 2},
+        {"Attack", 0, 5, 0, 2},
+        {"Magic", 0, 0, 5, 2},
+        {"Enchanted", 0, 3, 3, 2},
+        {"Lucky", 0, 0, 0, 6}
         };
 
         vector<vector<neckset>> Material{
-        {{"Obisidian", 10, 5, 0, 2},//Health
-        {"Emerald", 10, 0, 5, 2},
-        {"Diamond", 10, 3, 3, 2}},
-        {{"Ruby", 3, 10, 0, 2},//Attack
-        {"Garnet", 0, 10, 3, 2},
-        {"Onyx", 0, 15, 0, 2}},
-        {{"Amethyst", 3, 0, 10, 2},//Magic
-        {"Aquamarine", 3, 3, 10, 2},
-        {"Crystal", 0, 0, 15, 2}},
-        {{"Blessed", 3, 7, 7, 2},//Enchanted
-        {"Bloody", 0, 5, 10, 2},
-        {"Curssed", 0, 10, 5, 2}},
-        {{"Moonstone", 3, 3, 3, 5},//Lucky
-        {"Topaz", 0, 5, 5, 5},
-        {"Pearl", 3, 5, 0, 5}}
+        {{"Obisidian", 6, 0, 0, 2},//Health
+        {"Emerald", 5, 0, 0, 3},
+        {"Diamond", 4, 0, 0, 4}},
+        {{"Ruby", 0, 6, 0, 2},//Attack
+        {"Garnet", 0, 5, 0, 3},
+        {"Onyx", 0, 4, 0, 4}},
+        {{"Amethyst", 0, 0, 6, 2},//Magic
+        {"Aquamarine", 0, 0, 5, 3},
+        {"Crystal", 0, 0, 4, 4}},
+        {{"Blessed", 0, 3, 3, 2},//Enchanted
+        {"Bloody", 0, 4, 2, 2},
+        {"Curssed", 0, 2, 4, 2}},
+        {{"Moonstone", 2, 0, 0, 5},//Lucky
+        {"Topaz", 0, 2, 0, 5},
+        {"Pearl", 0, 0, 2, 5}}
         };
 
         vector<neckset> EquipType{
-        {"Neclke", 10, 3, 3, 2},//Health
-        {"Pendant", 3, 10, 3, 2},//Attack
-        {"Amulet", 3, 3, 10, 2},//Magic
-        {"Collar", 3, 5, 5, 2},//Enchanted
-        {"Choker", 3, 3, 3, 5}//Lucky
+        {"Neclke", 5, 1, 1, 2},//Health
+        {"Pendant", 1, 5, 1, 2},//Attack
+        {"Amulet", 1, 1, 5, 2},//Magic
+        {"Collar", 1, 3, 3, 2},//Enchanted
+        {"Choker", 2, 2, 2, 5}//Lucky
         };
 
         vector<vector<neckset>> Sufix{
-        {{"of Mirai", 10, 5, 0, 2},//Health
-        {"of Life", 10, 0, 5, 2},
-        {"of Obssesion", 10, 3, 3, 2}},
-        {{"of Wrath", 3, 10, 0, 2},//Attack
-        {"of Fury", 0, 10, 3, 2},
-        {"of Hate", 0, 15, 0, 2}},
-        {{"of Ocultism", 3, 0, 10, 2},//Magic
-        {"of Demons", 3, 3, 10, 2},
-        {"of Angels", 0, 0, 15, 2}},
-        {{"of Duality", 3, 7, 7, 2},//Enchanted
-        {"of Sacrifice", 0, 5, 10, 2},
-        {"of Leprosy", 0, 10, 5, 2}},
-        {{"of Greed", 3, 3, 3, 5},//Lucky
-        {"of Clauneck", 0, 5, 5, 5},
-        {"of Barachiel", 0, 3, 3, 5}}
+        {{"of Mirai", 5, 2, 0, 2},//Health
+        {"of Life", 5, 0, 2, 2},
+        {"of Obssesion", 5, 1, 1, 2}},
+        {{"of Wrath", 2, 5, 0, 2},//Attack
+        {"of Fury", 0, 5, 2, 2},
+        {"of Hate", 1, 5, 1, 2}},
+        {{"of Ocultism", 2, 0, 5, 2},//Magic
+        {"of Demons", 0, 2, 5, 2},
+        {"of Angels", 1, 1, 5, 2}},
+        {{"of Duality", 0, 3, 3, 2},//Enchanted
+        {"of Sacrifice", 2, 2, 3, 2},
+        {"of Leprosy", 2, 3, 2, 2}},
+        {{"of Greed", 3, 1, 1, 5},//Lucky
+        {"of Clauneck", 1, 3, 1, 5},
+        {"of Barachiel", 1, 1, 3, 5}}
         };
 
         int TypeIndex = DistReal<int>(0, Type.size()-1);
@@ -2287,33 +2285,37 @@ public:
                 NeckleX.NeckleInfo();
         }
 
+        equipment& E = Equip;
         cout << "\n[KEEP OR SACRIFICE?]" << endl;
         cout << "[1].[KEEP IT]" << endl;
         cout << "[2].[SACRIFICE]:[" << sacrifice << "Souls]"<< endl;
         choice1 = VerifyCin(1, 2);
 
         if(choice1 == 1){
-            do{
-                switch(type){
-                    case 1:
-                        WeaponInvDisplay();
-                        break;
-                    case 2:
-                        ArmorInvDisplay();
-                        break;
-                    case 3:
-                        GlovesInvDisplay();
-                        break;
-                    case 4:
-                        NeckleInvDisplay();
-                        break;
-                }
-                printSlowly("[SHOW INVENTORY AGAIN?]", 60);
-                cout << "[1].[YES]" << endl;
-                cout << "[2].[NO]" << endl;
-                repeat = VerifyCin(1,2);
 
-            }while(repeat != 2);
+            switch(type){
+                case 1:
+                    for(int i = 0; i < E.WeaponInv.size(); ++i){
+                        cout << "[" << i+1 << "][" << E.WeaponInv[i].Name_W << "]" << endl;
+                    }
+                    break;
+                case 2:
+                    for(int i = 0; i < E.ArmorInv.size(); ++i){
+                        cout << "[" << i+1 << "][" << E.ArmorInv[i].Name_A << "]" << endl;
+                    }
+                    break;
+                case 3:
+                    for(int i = 0; i < E.GloveInv.size(); ++i){
+                        cout << "[" << i+1 << "][" << E.GloveInv[i].Name_GL << "]" << endl;
+                    }
+                    break;
+                case 4:
+                    for(int i = 0; i < E.NeckInv.size(); ++i){
+                        cout << "[" << i+1 << "][" << E.NeckInv[i].Name_N << "]" << endl;
+                    }
+
+                    break;
+            }
 
             cout << "\n[SELECT SLOT[1-8] TO STORE THE EQUIPMENT]" << endl;
             slot = VerifyCin(1, 8) - 1;
@@ -2363,11 +2365,11 @@ public:
         };
 
         vector<pair<string, set>> Soul{
-        {"Angel", {300, 40, 25, 35, 1.30, 25, 40, 35, 240, 220}},//Angel
-        {"Demon", {320, 50, 10, 40, 1.25, 20, 40, 40, 260, 180}},//Demon
-        {"Human", {280, 45, 15, 35, 1.35, 30, 40, 40, 200, 320}},//Human
-        {"Creature", {310, 40, 25, 30, 1.20, 25, 35, 45, 220, 220}},//Creature
-        {"Unknown", {275, 25, 35, 35, 1.35, 35, 35, 45, 200, 240}}//Unknown
+        {"Angel", {300, 40, 25, 35, 1.30, 25, 40, 55, 240, 220}},//Angel
+        {"Demon", {320, 50, 10, 40, 1.25, 20, 40, 50, 260, 180}},//Demon
+        {"Human", {280, 45, 15, 35, 1.35, 30, 40, 50, 200, 320}},//Human
+        {"Creature", {310, 40, 25, 30, 1.20, 25, 45, 55, 220, 220}},//Creature
+        {"Unknown", {275, 25, 35, 35, 1.35, 35, 45, 55, 200, 240}}//Unknown
         };
 
         int Select = DistReal<int>(0, Soul.size()-1);
@@ -2414,12 +2416,11 @@ public:
 
     };
 
-    void character::CreateAbility(ability& RandAbility){
+    void character::CreateAbility(ability& RandAbility, int type){
 
         struct hability{
 
             string name;
-            string evoke;
             float dmg;
             float mag;
             float heal;
@@ -2430,123 +2431,123 @@ public:
         };
 
         vector<vector<vector<hability>>> Prefix{
-        {{{"Sharp", "SHAP", 1.10, 0.40, 0, 1, 25, 0},//blade
-        {"Quick", "ZIA", 1.05, 0.45, 0, 1, 20, 0},
-        {"Strong", "STO", 1.15, 0.35, 0, 1, 30, 0},
-        {"Fast", "MOT", 1.20, 0.30, 0, 1, 40, 0}},
-        {{"Lacerating", "LASH", 0.40, 0.10, 0, 3, 30, 0},//dagger
-        {"Furious", "FHU", 0.25, 0.10, 0, 4, 35, 5},
-        {"Stealth", "STA", 1.30, 0.30, 0, 1, 25, 0},
-        {"Vampiric", "VAN", 0.60, 0.20, 0.10, 2, 45, 5}},
-        {{"Heavy", "HEN", 1.30, 0.20, 0, 1, 40, 0},//blunt
-        {"Brutal", "BHU", 1.35, 0.25, 0, 1, 45, 0},
-        {"Smasher", "ZYA", 1.20, 0.30, 0, 1, 30, 0},
-        {"Soft", "CYA", 1.10, 0.40, 0, 1, 20, 0}},
-        {{"Pointed", "POT", 1.35, 0.25, 0, 1, 45, 0},//perfuration
-        {"Sequencial", "SER", 0.40, 0.15, 0, 3, 35, 5},
-        {"Sanguinare", "SAG", 0.70, 0.10, 0.05, 2, 50, 10},
-        {"Perfurating", "PER", 1.15, 0.45, 0, 1, 20, 0}}},
-        {{{"Soul", "SOU", 0.50, 1.10, 0, 1, 0, 20},//wand
-        {"Ocult", "OCS", 0.35, 1.20, 0, 1, 0, 30},
-        {"Sparking", "SPA", 0.30, 1.25, 0, 1, 0, 35},
-        {"Healing", "HEL", 0.25, 0.80, 0.30, 1, 0, 30}},
-        {{"Flaming", "FLAM", 0.40, 1.20, 0, 1, 5, 30},//staff
-        {"Aquatic", "AKO", 0.25, 1.30, 0, 1, 5, 35},
-        {"Obscure", "OBEX", 0.30, 1.25, 0, 1, 0, 25},
-        {"Spiritual", "SPIT", 0.20, 0.65, 0, 2, 0, 30}},
-        {{"Macabre", "MAR", 0.30, 1.30, 0, 1, 5, 35},//idoll
-        {"Satanic", "ZIA", 0.35, 1.20, 0, 1, 5, 30},
-        {"Spook", "SPO", 0.10, 0.60, 0, 2, 5, 30},
-        {"Cannibal", "CAN", 0.30, 1.10, 0.30, 1, 10, 25}},
-        {{"Holy", "HOL", 0.30, 1.25, 0, 1, 0, 25},//book
-        {"Unholy", "ZIA", 0.20, 1.15, 0, 1, 0, 20},
-        {"Saint", "SAY", 0.40, 1.20, 0, 1, 0, 30},
-        {"Blasphemous", "CYA", 0.30, 0.95, 0.10, 1, 0, 10}}},
-        {{{"Sparking", "SPR", 1.10, 1.10, 0, 1, 20, 20},//magic blade
-        {"Flaming", "FAN", 1.15, 1.15, 0, 1, 30, 30},
-        {"Spiritual", "SPT", 1.10, 1.20, 0, 1, 30, 20},
-        {"Destructive", "DES", 0.60, 0.60, 0, 2, 35, 35}},
-        {{"Flashing", "FLA", 0.30, 0.30, 0, 3, 30, 30},//magic dagger
-        {"Slasher", "SLA", 0.30, 0.30, 0, 4, 30, 30},
-        {"Stealth", "STA", 1.30, 1.05, 0, 1, 30, 5},
-        {"Vampiric", "VAP", 0.60, 0.60, 0.10, 2, 25, 25}},
-        {{"Holy", "HOY", 1.30, 1.10, 0, 1, 40, 20},//magic blunt
-        {"Soul", "SOL", 1.15, 1.05, 0, 1, 10, 20},
-        {"Sacred", "SAC", 1.05, 1.15, 0, 1, 20, 10},
-        {"Cursed", "CUR", 1.25, 1.25, 0, 1, 30, 30}},
-        {{"Fast", "FAS", 1.10, 1.10, 0, 1, 15, 15},//orb
-        {"Explosive", "EXP", 1.05, 1.25, 0, 1, 20, 40},
-        {"Angelical", "ANG", 0.65, 0.60, 0, 2, 30, 20},
-        {"Bloody", "BLU", 0.20, 0.20, 0.03, 5, 10, 10}}}
+        {{{"Sharp", 1.06, 0, 0, 1, 25, 0},//blade
+        {"Quick", 1.03, 0, 0, 1, 20, 0},
+        {"Strong", 1.09, 0, 0, 1, 30, 0},
+        {"Fast", 1.12, 0, 0, 1, 40, 0}},
+        {{"Lacerating", 0.26, 0, 0, 3, 30, 0},//dagger
+        {"Furious", 0.23, 0, 0, 4, 35, 5},
+        {"Stealth", 1.18, 0, 0, 1, 25, 0},
+        {"Vampiric", 0.42, 0, 0.10, 2, 45, 5}},
+        {{"Heavy", 1.18, 0, 0, 1, 40, 0},//blunt
+        {"Brutal", 1.21, 0, 0, 1, 45, 0},
+        {"Smasher", 1.12, 0, 0, 1, 30, 0},
+        {"Soft", 1.03, 0, 0, 1, 20, 0}},
+        {{"Pointed", 1.21, 0, 0, 1, 45, 0},//perfuration
+        {"Sequencial", 0.32, 0, 0, 3, 35, 5},
+        {"Sanguinare", 0.43, 0, 0.05, 2, 50, 10},
+        {"Perfurating", 1.09, 0, 0, 1, 20, 0}}},
+        {{{"Soul", 0, 1.03, 0, 1, 0, 20},//wand
+        {"Ocult", 0, 1.09, 0, 1, 0, 30},
+        {"Sparking", 0, 1.12, 0, 1, 0, 35},
+        {"Healing", 0, 0.10, 0.30, 1, 0, 30}},
+        {{"Flaming", 0, 1.12, 0, 1, 5, 30},//staff
+        {"Aquatic", 0, 1.18, 0, 1, 5, 35},
+        {"Obscure", 0, 1.21, 0, 1, 0, 25},
+        {"Spiritual", 0, 0.40, 0, 2, 0, 30}},
+        {{"Macabre", 0, 1.12, 0, 1, 5, 35},//idoll
+        {"Satanic", 0, 1.09, 0, 1, 5, 30},
+        {"Spook", 0, 0.40, 0, 2, 5, 30},
+        {"Cannibal", 0, 0.70, 0.20, 1, 10, 25}},
+        {{"Holy", 0, 1.12, 0, 1, 0, 25},//book
+        {"Unholy", 0, 1.15, 0, 1, 0, 20},
+        {"Saint", 0, 1.12, 0, 1, 0, 30},
+        {"Blasphemous", 0, 0.80, 0.10, 1, 0, 30}}},
+        {{{"Sparking", 1.06, 1.06, 0, 1, 20, 20},//magic blade
+        {"Flaming", 1.09, 1.09, 0, 1, 30, 30},
+        {"Spiritual", 1.06, 1.12, 0, 1, 30, 35},
+        {"Destructive", 0.42, 0.42, 0, 2, 35, 35}},
+        {{"Flashing", 0.26, 0.26, 0, 3, 30, 30},//magic dagger
+        {"Slasher", 0.20, 0.20, 0, 4, 30, 30},
+        {"Stealth", 1.18, 1.03, 0, 1, 30, 5},
+        {"Vampiric", 0.38, 0.38, 0.03, 2, 25, 25}},
+        {{"Holy", 1.18, 1.06, 0, 1, 40, 20},//magic blunt
+        {"Soul", 1.09, 1.03, 0, 1, 10, 20},
+        {"Sacred", 1.03, 1.09, 0, 1, 20, 10},
+        {"Cursed", 1.12, 1.12, 0, 1, 30, 30}},
+        {{"Fast", 1.06, 1.06, 0, 1, 15, 15},//orb
+        {"Explosive", 1.03, 1.12, 0, 1, 20, 40},
+        {"Angelical", 0.38, 0.38, 0, 2, 30, 20},
+        {"Bloody", 0.22, 0.22, 0.03, 4, 10, 10}}}
         };
 
         vector<vector<vector<hability>>> Base{
-        {{{"Cut", "CUT", 0.05, 0.0, 0, 0, 5, 0},//blade
-        {"Slash", "SLA", 0.10, 0.0, 0, 0, 10, 0},
-        {"Laceration", "LAC", 0.13, 0.0, 0, 0, 10, 0},
-        {"Double Strike", "DSTK", 0.00, 0.0, 0, 1, 20, 0}},
-        {{"Slash", "LAS", 0.10, 0.0, 0, 0, 5, 0},//dagger
-        {"Strike", "FHU", 0.20, 0.0, 0, 0, 10, 0},
-        {"Stab", "STB", 0.20, 0.05, 0, 0, 10, 5},
-        {"Drain", "VAN", 0.05, 0.05, 0.05, 0, 15, 0}},
-        {{"Strike", "HEN", 0.10, 0.0, 0, 0, 20, 0},//blunt
-        {"Hit", "HTT", 0.05, 0.0, 0, 0, 10, 0},
-        {"Smash", "SMA", 0.15, 0.0, 0, 0, 20, 0},
-        {"Butt", "BUT", 0.10, 0.05, 0, 0, 15, 5}},
-        {{"Hit", "HITO", 0.10, 0.05, 0, 0, 15, 0},//perfuration
-        {"Pierce", "PIER", 0.15, 0.05, 0, 0, 15, 5},
-        {"Needles", "NED", 0.10, 0.05, 0.05, 0, 20, 10},
-        {"Perfuration", "PER", 0.15, 0.00, 0, 0, 20, 0}}},
-        {{{"Spear", "SPE", 0.00, 0.10, 0, 0, 0, 10},//wand
-        {"Arrow", "ARW", 0.00, 0.20, 0, 0, 0, 20},
-        {"Ball", "BAL", 0.05, 0.25, 0, 0, 0, 30},
-        {"Heal", "HEL", 0.00, 0.05, 0.10, 0, 0, 20}},
-        {{"Great Arrow", "GARW", 0.0, 0.20, 0, 0, 0, 20},//staff
-        {"Spark", "SPK", 0.05, 0.20, 0, 0, 5, 20},
-        {"Chaos Ball", "CHBA", 0.00, 0.25, 0, 0, 0, 25},
-        {"Earthquake", "ERTH", 0.10, 0.15, 0, 0, 10, 20}},
-        {{"Ritual", "RIT", 0.00, 0.30, 0, 0, 0, 25},//idoll
-        {"Summon", "SUM", 0.05, 0.20, 0, 0, 5, 20},
-        {"Sacrifice", "SPO", 0.10, 0.25, 0, 0, 10, 25},
-        {"Heal", "HAL", 0.00, 0.10, 0.15, 0, 5, 20}},
-        {{"Spelling", "SPL", 0.00, 0.25, 0, 0, 0, 25},//book
-        {"Summon", "SMN", 0.00, 0.15, 0, 0, 0, 15},
-        {"Evoke", "EVE", 0.05, 0.20, 0, 0, 5, 20},
-        {"Manipulation", "MAN", 0.00, 0.05, 0.14, 0, 5, 20}}},
-        {{{"Cut", "CUT", 0.05, 0.05, 0, 0, 5, 5},//magic blade
-        {"Slash", "SLA", 0.10, 0.05, 0, 0, 10, 5},
-        {"Laceration", "LAC", 0.13, 0.05, 0, 0, 13, 5},
-        {"Strike", "STK", 0.05, 0.05, 0, 1, 25, 25}},
-        {{"Slash", "LAS", 0.10, 0.05, 0, 0, 10, 5},//magic dagger
-        {"Strike", "FHU", 0.20, 0.10, 0, 0, 20, 10},
-        {"Stab", "STB", 0.10, 0.20, 0, 0, 10, 20},
-        {"Drain", "VAN", 0.05, 0.05, 0.05, 0, 15, 15}},
-        {{"Strike", "HEN", 0.10, 0.0, 0, 0, 20, 0},//magic blunt
-        {"Hit", "HTT", 0.05, 0.5, 0, 0, 5, 5},
-        {"Smash", "SMA", 0.15, 0.15, 0, 0, 15, 15},
-        {"Butt", "BUT", 0.15, 0.05, 0, 0, 15, 5}},
-        {{"Hit", "HIT", 0.05, 0.10, 0, 0, 5, 10},//orb
-        {"Spark", "SRK", 0.05, 0.15, 0, 0, 5, 15},
-        {"Moves", "MOV", 0.20, 0.05, 0, 0, 20, 5},
-        {"Dance", "DAN", 0.10, 0.15, 0, 0, 10, 15}}}
+        {{{"Cut", 0.05, 0.0, 0, 0, 5, 0},//blade
+        {"Slash", 0.10, 0.0, 0, 0, 10, 0},
+        {"Laceration", 0.13, 0.0, 0, 0, 10, 0},
+        {"Double Strike", -0.50, 0.0, 0, 1, 20, 0}},
+        {{"Slash", 0.10, 0.0, 0, 0, 5, 0},//dagger
+        {"Strike", 0.20, 0.0, 0, 0, 10, 0},
+        {"Stab", 0.20, 0, 0, 0, 10, 5},
+        {"Drain", 0.05, 0, 0.05, 0, 15, 0}},
+        {{"Strike", 0.10, 0, 0, 0, 20, 0},//blunt
+        {"Hit", 0.05, 0, 0, 0, 10, 0},
+        {"Smash", 0.15, 0, 0, 0, 20, 0},
+        {"Butt", 0.10, 0, 0, 0, 15, 5}},
+        {{"Hit", 0.10, 0, 0, 0, 15, 0},//perfuration
+        {"Pierce", 0.15, 0, 0, 0, 15, 5},
+        {"Needles", 0.10, 0, 0.05, 0, 20, 10},
+        {"Perfuration", 0.15, 0.00, 0, 0, 20, 0}}},
+        {{{"Spear", 0.00, 0.10, 0, 0, 0, 10},//wand
+        {"Arrow", 0.00, 0.20, 0, 0, 0, 20},
+        {"Ball", 0, 0.25, 0, 0, 0, 30},
+        {"Heal", 0, 0.05, 0.10, 0, 0, 20}},
+        {{"Great Arrow", 0, 0.20, 0, 0, 0, 20},//staff
+        {"Spark", 0, 0.20, 0, 0, 5, 20},
+        {"Chaos Ball", 0.00, 0.25, 0, 0, 0, 25},
+        {"Earthquake", 0, 0.15, 0, 0, 10, 20}},
+        {{"Ritual", 0.00, 0.30, 0, 0, 0, 25},//idoll
+        {"Summon", 0.0, 0.20, 0, 0, 5, 20},
+        {"Sacrifice", 0, 0.25, 0, 0, 10, 25},
+        {"Heal", 0.00, 0.10, 0.15, 0, 5, 20}},
+        {{"Spelling", 0.00, 0.25, 0, 0, 0, 25},//book
+        {"Summon", 0.00, 0.15, 0, 0, 0, 15},
+        {"Evoke", 0, 0.20, 0, 0, 5, 20},
+        {"Manipulation", 0.00, 0.05, 0.7, 0, 5, 20}}},
+        {{{"Cut", 0.05, 0.05, 0, 0, 5, 5},//magic blade
+        {"Slash", 0.10, 0.05, 0, 0, 10, 5},
+        {"Laceration", 0.13, 0.05, 0, 0, 13, 5},
+        {"Strikes", -0.30, -0.30, 0, 1, 25, 25}},
+        {{"Slash", 0.10, 0.05, 0, 0, 10, 5},//magic dagger
+        {"Strike", 0.20, 0.10, 0, 0, 20, 10},
+        {"Stab", 0.10, 0.20, 0, 0, 10, 20},
+        {"Drain", 0.05, 0.05, 0.05, 0, 15, 15}},
+        {{"Strike", 0.10, 0.0, 0, 0, 20, 0},//magic blunt
+        {"Hit", 0.05, 0.5, 0, 0, 5, 5},
+        {"Smash", 0.15, 0.15, 0, 0, 15, 15},
+        {"Butt", 0.15, 0.05, 0, 0, 15, 5}},
+        {{"Hit", 0.05, 0.10, 0, 0, 5, 10},//orb
+        {"Spark", 0.05, 0.15, 0, 0, 5, 15},
+        {"Moves", 0.20, 0.05, 0, 0, 20, 5},
+        {"Dance", 0.10, 0.15, 0, 0, 10, 15}}}
         };
 
         vector<vector<hability>> Sufix{
-        {{"of Warriors", "WAR", 0.10, 0.0, 0, 0, 10, 0},//melee
-        {"of Destruction", "DEX", 0.10, 0.05, 0, 0, 10, 5},
-        {"of Beasts", "BEA", 0.15, 0, 0, 0, 15, 0},
-        {"of Fury", "FUR", 0.20, 0.00, 0, 0, 20, 0}},
-        {{"of Wisdom", "LASH", 0, 0.10, 0, 0, 0, 10},//magic
-        {"of Serenity", "SER", 0.05, 0.10, 0, 0, 5, 10},
-        {"of Chaos", "CHA", 0, 0.15, 0, 0, 15, 0},
-        {"of Cure", "CUR", 0, 0.15, 0.10, 0, 25, 0}},
-        {{"of Demons", "DEV", 0.15, 0.5, 0, 0, 15, 5},//enchanted
-        {"of Angels", "ANG", 0.05, 0.15, 0, 0, 5, 15},
-        {"of Ancients", "ANC", 0.20, 0.20, 0, 0, 20, 20},
-        {"of Distortion", "DIS", 0.20, 0.10, 0, 0, 20, 10}}
+        {{"of Warriors", 0.03, 0.0, 0, 0, 5, 0},//melee
+        {"of Destruction", 0.06, 0.0, 0, 0, 10, 0},
+        {"of Beasts", 0.09, 0, 0, 0, 15, 0},
+        {"of Fury", 0.12, 0.00, 0, 0, 20, 0}},
+        {{"of Wisdom", 0, 0.06, 0, 0, 0, 10},//magic
+        {"of Serenity", 0.00, 0.09, 0, 0, 0, 15},
+        {"of Chaos", 0, 0.03, 0, 0, 0, 5},
+        {"of Cure", 0, 0.04, 0.10, 0, 0, 25}},
+        {{"of Demons", 0.09, 0.03, 0, 0, 15, 5},//enchanted
+        {"of Angels", 0.03, 0.09, 0, 0, 5, 15},
+        {"of Ancients", 0.12, 0.12, 0, 0, 20, 20},
+        {"of Distortion", 0.12, 0.06, 0, 0, 20, 10}}
         };
 
-        int ClassIndex = DistReal<int>(0, 2);//melee, magic, enchanted
+        int ClassIndex = type;//melee, magic, enchanted
         int TypeIndex = DistReal<int>(0, 3);//4 ability types per class
         auto [rarity, RarityVal] = RarityGen();
 
@@ -2560,7 +2561,6 @@ public:
         hability& Su = Sufix[ClassIndex][SufixIndex];
 
         string Name = Pr.name + " " + Ba.name + " " + Su.name;
-        string Evoke = Pr.evoke + " " + Ba.evoke + " " + Su.evoke;
         float Dmg = Pr.dmg + Ba.dmg + Su.dmg;
         float Mag = Pr.mag + Ba.mag + Su.mag;
         float Heal = Pr.heal + Ba.heal + Su.heal;
@@ -2571,7 +2571,6 @@ public:
         A.Name_AB = Name;
         A.Type_AB = SetType(ClassIndex, TypeIndex);
         A.Rarity_AB = rarity;
-        A.Evoke_AB = Evoke;
         A.DMG_AB = SingleStats<float>(Dmg, RarityVal, 1);
         A.MAG_AB = SingleStats<float>(Mag, RarityVal, 1);
         A.Heal_AB = SingleStats<float>(Heal, RarityVal, 1);
@@ -2589,7 +2588,6 @@ public:
         cout << "[" << AB.DMG_AB << "/" << AB.MAG_AB << "/" << AB.Heal_AB << "]" << endl;
         cout << "[TIMES/AP/MP]" << endl;
         cout << "[" << AB.Times_AB << "/" << AB.AP_Cost << "/" << AB.MP_Cost << "]" << endl;
-        cout << "[EVOKE]: " << AB.Evoke_AB << "]\n" << endl;
     }
 
     int character::CurseDamage(enemy& Enemy){
@@ -2605,7 +2603,7 @@ public:
         }
     }
 
-    void character::Battle(enemy& E){
+    bool character::Battle(enemy& E){
         int turn = 0;
         int abi, confirm, select, TotalDamage, TotalHeal, FinalDamage;
         string evoke;
@@ -2619,32 +2617,22 @@ public:
             cout << "[YOUR MP:" << MP.MIN << "/" << MP.MAX << "]\n" << endl;
 
             do{
-                cout << "[YOUR ABILITIES]:" << endl;
+                cout << "\n[YOUR ABILITIES]:" << endl;
                 for(int i = 0; i < 4; ++i){
                 ability& AB = Equip.Abilities[i];
-                cout << "\n[" << (i+1) << "][" << AB.Name_AB << "]" << endl;
+                cout << "[" << (i+1) << "][" << AB.Name_AB << "]" << endl;
                 }
-                cout << "[SELECT ABILITY]:" << endl;
+                cout << "\n[SELECT ABILITY]:" << endl;
                 abi = VerifyCin(1, 4)-1;
                 ShowAbility(abi);
-                cout << "[EVOKE THIS ABILITY?]" << endl;
-                cout << "[1].[EVOKE]" << endl;
+                cout << "\n[USE THIS ABILITY?]" << endl;
+                cout << "[1].[USE ABILITY]" << endl;
                 cout << "[2].[TRY ANOTHER]" << endl;
                 confirm = VerifyCin(1, 2);
 
                 if(confirm == 1){
-                    cout << "[TYPE EVOCATION]:" << endl;
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    getline(cin, evoke);
-
-                    if(evoke == Equip.Abilities[abi].Evoke_AB){
-                        printSlowly("[EVOKING...]", 80);
-                        break;
-                    }
-                    else{
-                        printSlowly("[FAIL...]", 80);
-                        continue;
-                    }
+                    cout << "\n[" << Equip.Abilities[abi].Name_AB << "]\n" << endl;
+                    break;
                 }
                 else{
                     cout << "\n[SELECT ANOTHER ONE]\n" << endl;
@@ -2656,22 +2644,41 @@ public:
             weapon& W = Equip.Weapon;
             int TotalAtk = DistReal<int>(ATK.MIN, ATK.MAX) * A.DMG_AB;
             int TotalMag = DistReal<int>(MAG.MIN, MAG.MAX) * A.MAG_AB;
+            TotalHeal = HP.MAX * A.Heal_AB;
             int CurseAtk = CurseDamage(E);
+            int TotalDamage = 0;
+
+            if(A.Type_AB[0] == "Melee"){
+                TotalDamage = TotalAtk;
+                cout << "[MELEE ATTACK:" << TotalDamage << "]" << endl;
+                cout << "[HEAL:" << TotalHeal << "]" << endl;
+            }
+            else if(A.Type_AB[0] == "Magic"){
+                TotalDamage = TotalMag;
+                cout << "[MAGIC ATTACK:" << TotalDamage << "]" << endl;
+                cout << "[HEAL:" << TotalHeal << "]" << endl;
+            }
+            else if(A.Type_AB[0] == "Enchanted"){
+                TotalDamage = (TotalAtk + TotalMag)/2;
+                cout << "[ENCHANTED ATTACK:" << TotalDamage << "]" << endl;
+                cout << "[HEAL:" << TotalHeal << "]" << endl;
+            }
+
+            if(CurseAtk > 0){
+                cout << "[CURSE ATTACK:" << CurseAtk << "]" << endl;
+                TotalDamage += CurseAtk;
+            }
 
             if(A.Type_AB[0] != W.Type_W[0]){
-                printSlowly("\n[DIFERENT WEAPON CLASS, 5% OF PENALITY]\n", 60);
-                TotalDamage = (TotalAtk + TotalMag + CurseAtk) * 0.95;
-                TotalHeal = A.Heal_AB * 0.95;
-            }
-            else{
-                TotalDamage = TotalAtk + TotalMag + CurseAtk;
-                TotalHeal = A.Heal_AB;
+                printSlowly("\n[DIFERENT WEAPON CLASS, 10% OF PENALITY]\n", 60);
+                TotalDamage *= 0.90;
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
 
             if(A.Type_AB[1] != W.Type_W[1]){
-                printSlowly("\n[DIFERENT WEAPON TYPE, 5% OF PENALITY]\n", 60);
-                TotalDamage *= 0.95;
-                TotalHeal *= 0.95;
+                printSlowly("\n[DIFERENT WEAPON TYPE, 10% OF PENALITY]\n", 60);
+                TotalDamage *= 0.90;
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
 
             int DetLuck = DistReal<int>(1, 100);
@@ -2684,6 +2691,7 @@ public:
             if(LUCK > DetLuck){
                 printSlowly("\n[CRITICAL HIT!][" + Percent(CharCrit) + "]\n", 60);
                 TotalDamage *= CharCrit;
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
 
             int precision = DistReal<int>(PREC.MIN, PREC.MAX);
@@ -2692,13 +2700,16 @@ public:
             if(precision < E.DODGE_EN.MIN){
                 printSlowly("\n[ALMOST MISS HIT, 10% OF PENALITY]\n", 60);
                 TotalDamage *= 0.90;
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
             else if(precision > E.DODGE_EN.MAX){
                 printSlowly("\n[PERFECT HIT, 10% OF ADVANTAGE]\n", 60);
                 TotalDamage *= 1.10;
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
             else{
-                printSlowly("\n[YOU HIT THE TARGET]\n", 60);
+                printSlowly("\n[NORMAL TARGET HIT]\n", 60);
+                cout << "[ATTACK:" << TotalDamage << "]" << endl;
             }
 
             int EnemyDef = DistReal<int>(E.DEF_EN.MIN, E.DEF_EN.MAX);
@@ -2724,26 +2735,28 @@ public:
             else{
                 for(int i = 1; i <= A.Times_AB; ++i){
                     printSlowly("\n[YOU HIT THE ENEMY WITH: " + A.Name_AB + "]", 30);
-                    printSlowly("\n[DAMAGE: " + to_string(FinalDamage) + "]\n", 30);
+                    printSlowly("\n[DAMAGE DELT: " + to_string(FinalDamage) + "]\n", 30);
                     E.HP_EN.MIN -= FinalDamage;
                 }
 
                 if(TotalHeal > 0){
-                    printSlowly("\n[YOU HEALED YOURSELF WITH: " + to_string(TotalHeal) + "]\n", 60);
+                    printSlowly("\n[YOU HEALED YOURSELF WITH: " + to_string(TotalHeal) + "%]\n", 60);
+                    HP.MIN += HP.MAX * TotalHeal;
                 }
-                HP.MIN += HP.MAX * TotalHeal;
                 AP.MIN -= A.AP_Cost;
                 MP.MIN -= A.MP_Cost;
             }
 
             if(E.HP_EN.MIN <= 0){
                 printSlowly("\n[ENEMY DEFEATED!]\n", 60);
-                int gain = ceil((E.HP_EN.MAX + E.ATK_EN.MAX + E.MAG_EN.MAX)/5);
+                int gain = ceil((E.HP_EN.MAX + E.ATK_EN.MAX + E.MAG_EN.MAX)/3);
                 Soul.S_EXP.MIN += gain;
                 Itens.Souls += gain;
+                Itens.Bones += 3;
                 enter("\n[GAINED EXP/SOULS:" + to_string(gain) + "]\n", 60);
                 EquipFound();
-                break;
+                LevelUp();
+                return true;
             }
 
             enter("\n[ENEMY TURN]\n", 80);
@@ -2796,18 +2809,38 @@ public:
 
             if(HP.MIN <= 0){
                 printSlowly("\n[YOU WERE DEFEATED!]\n\n", 60);
-                break;
+                return false;
             }
 
         }while(true);
-        LevelUp();
 
     }
 
-    void character::FoundEnemy(int level){
+    void character::DeadReset(){
+        equipment& E = Equip;
+        atributes& At = Atributes;
+        E.Weapon = weapon();
+        E.Armor = armor();
+        E.Gloves = gloves();
+        E.Neckle = necklace();
+        for(int i = 0; i < E.Abilities.size(); ++i){
+            E.Abilities[i] = ability();
+        }
+        At.POINTS = 0;
+        At.RES = 0;
+        At.STR = 0;
+        At.WIS = 0;
+        At.DEX = 0;
+        At.AGL = 0;
+        UpdateAtributes();
+        UpdateCharStatus();
+    }
+
+    void character::FoundEnemy(){
 
         enemy FOE;
-        cout << "\n[BATTLE DIFICULTY]" << endl;
+        cout << "\n[HOLE LEVEL:" << Places.Hole << "]" << endl;
+        cout << "[BATTLE DIFICULTY]" << endl;
         cout << "1.[EASY]" << endl;
         cout << "2.[NORMAL]" << endl;
         cout << "3.[HARD]" << endl;
@@ -2815,7 +2848,7 @@ public:
         cout << "5.[LEGENDARY]" << endl;
         int dificulty = VerifyCin(1, 5);
 
-        GenEnemy(FOE, dificulty, level);
+        GenEnemy(FOE, dificulty, Places.Hole);
 
         FOE.EnemyInfo();
 
@@ -2825,7 +2858,20 @@ public:
         int ch1 = VerifyCin(1, 2);
 
         if(ch1 == 1){
-            Battle(FOE);
+            bool win = Battle(FOE);
+
+            if(win){
+                ++Places.Hole;
+                cout << "\nBelial: let's go deeper...\n" << endl;
+            }
+            else{
+                Places.Hole = 1;
+                DeadReset();
+                cout << "\nBelial: If you die in the Hole" << endl;
+                cout << "\nBelial: You lose all execept inventory" << endl;
+                printSlowly("\nBelial: Again, who are you?\n", 100);
+                StartCharacter();
+            }
         }
         else{
             printSlowly("\n[RUNNIG...]\n", 80);
@@ -2836,6 +2882,9 @@ public:
 
     void character::StartCharacter(){
         Name = "KEITH";
+
+        do{
+
         cout << "\nKeith: I'm a..." << endl;
         cout << "[1].[WARRIOR]" << endl;
         cout << "[2].[MAGE]" << endl;
@@ -2846,22 +2895,35 @@ public:
             case 1:
                 Soul = soul("Human", "Warrior", 300, {60, 70}, {30, 40}, {25, 35}, 30, {20, 35}, 1.25, 45, {40, 55}, {40, 55}, 200, 80, 1, {0, 140});
                 Equip.Weapon = weapon("Battle Knife", {"Melee", "Daggers"}, "Sin", "[C][COMMON]", {15, 20}, {0, 0}, 5, 0.05, 5, {5, 10}, 1, 100);
-                Equip.Abilities[0] = ability("Deep Cut", {"Melee", "Daggers"}, "[R][RARE]", "DYP CUT", 1.15, 0.0, 0.0, 1, 30, 5);
+                Equip.Abilities[0] = ability("Deep Cut", {"Melee", "Daggers"}, "[R][RARE]", 1.15, 0.0, 0.0, 1, 30, 5);
                 break;
             case 2:
                 Soul = soul("Human", "Mage", 280, {30, 40}, {65, 70}, {20, 30}, 30, {20, 35}, 1.20, 45, {40, 55}, {40, 55}, 80, 200, 1, {0, 140});
                 Equip.Weapon = weapon("Old Staff", {"Magic", "Staff"}, "Sin", "[C][COMMON]", {0, 0}, {15, 20}, 5, 0.05, 5, {5, 10}, 1, 100);
-                Equip.Abilities[0] = ability("Soul Arrow", {"Magic", "Staff"}, "[R][RARE]", "SOU ARW", 0.0, 1.15, 0.0, 1, 5, 30);
+                Equip.Abilities[0] = ability("Soul Arrow", {"Magic", "Staff"}, "[R][RARE]", 0.0, 1.15, 0.0, 1, 5, 30);
                 break;
             case 3:
                 Soul = soul("Human", "Spellsword", 290, {40, 50}, {40, 50}, {25, 30}, 30, {20, 35}, 1.10, 55, {40, 55}, {40, 55}, 160, 160, 1, {0, 140});
                 Equip.Weapon = weapon("Flaming Sword", {"Enchanted", "Magic Blade"}, "Sin", "[C][COMMON]", {7, 10}, {7, 10}, 5, 0.05, 5, {5, 10}, 1, 100);
-                Equip.Abilities[0] = ability("Ignated Slash", {"Enchanted", "Magic Blade"}, "[R][RARE]", "IGN SLS", 1.03, 1.03, 0.0, 1, 20, 20);
+                Equip.Abilities[0] = ability("Ignated Slash", {"Enchanted", "Magic Blade"}, "[R][RARE]", 1.03, 1.03, 0.0, 1, 20, 20);
                 break;
         }
         UpdateCharStatus();
         RestoreStats();
         CharInfo();
+        cout << "\nBelial: Are you sure?" << endl;
+        cout << "[1].[Not Sure...]" << endl;
+        cout << "[2].[I'm Sure...]" << endl;
+        int sure = VerifyCin(1, 2);
+
+        if(sure == 1){
+            continue;
+        }
+        else{
+            break;
+        }
+
+        }while(true);
     }
 
     void character::Merchant(){
@@ -3001,7 +3063,7 @@ public:
         cout << "[1].[SHOW ABILITIES]" << endl;
         cout << "[2].[ABILITIES INVENTORY]" << endl;
         cout << "[3].[CHANGE ABILITIES]" << endl;
-        cout << "[4].[CREATE ABILITY]" << endl;
+        cout << "[4].[BUY ABILITY]" << endl;
         cout << "[5].[LEAVE]" << endl;
         int menu = VerifyCin(1, 5);
 
@@ -3069,29 +3131,58 @@ public:
         }
         else if(menu == 4){
             do{
-            ability Hab;
-            printSlowly("\n[GENERATING ABILITY...]\n", 60);
-            CreateAbility(Hab);
-            Hab.AbilityInfo();
-            printSlowly("\n[KEEP ON INVENTORY?]\n", 80);
-            cout << "[1].[KEEP IT]" << endl;
-            cout << "[2].[ROLL AGAIN]" << endl;
-            cout << "[3].[EXIT]" << endl;
-            int ab = VerifyCin(1, 3);
+            printSlowly("\n[ABILITY SHOP]\n", 60);
+            cout << "[YOUR BONES" << Itens.Bones << "]" << endl;
+            cout << "[1].[BUY]" << endl;
+            cout << "[2].[EXIT]" << endl;
+            int buy = VerifyCin(1, 2);
 
-            if(ab == 1){
-                cout << "[SELECT INVENTORY]:" << endl;
-                int inv = VerifyCin(1, 8)-1;
-                Equip.AbilityInv[inv] = Hab;
-                printSlowly("\n[KEEPT...]\n", 80);
-                continue;
-            }
-            else if(ab == 2){
-                printSlowly("\n[ROLLING AGAIN...]\n", 80);
-                continue;
+            if(buy == 1){
+                do{
+                if(Itens.Bones > 0){
+                    ability Hab;
+                    --Itens.Bones;
+                    printSlowly("\n[GENERATING ABILITY...]\n", 60);
+                    printSlowly("\n[WHAT TYPE?]\n", 80);
+                    cout << "[1].[MELEE]" << endl;
+                    cout << "[2].[MAGIC]" << endl;
+                    cout << "[3].[ENCHANTED]" << endl;
+                    int type = VerifyCin(1, 3)-1;
+                    CreateAbility(Hab, type);
+                    Hab.AbilityInfo();
+                    printSlowly("\n[KEEP ON INVENTORY?]\n", 80);
+                    cout << "[1].[KEEP IT]" << endl;
+                    cout << "[2].[BUY AGAIN]" << endl;
+                    cout << "[3].[EXIT]" << endl;
+                    int ab = VerifyCin(1, 3);
+
+                    if(ab == 1){
+                        cout << "[SELECT INVENTORY]:" << endl;
+                        int inv = VerifyCin(1, 8)-1;
+                        Equip.AbilityInv[inv] = Hab;
+                        printSlowly("\n[KEEPT...]\n", 80);
+                        break;
+                    }
+                    else if(ab == 2){
+                        printSlowly("\n[BUY ANOTHER...]\n", 80);
+                        continue;
+                    }
+                    else{
+                        printSlowly("\n[LEAVING SHOP...]\n", 80);
+                        break;
+                    }
+
+                }
+                else{
+                    printSlowly("\n[YOU HAVE NO BONES...]\n", 80);
+                    break;
+                }
+
+                }while(true);
+
             }
             else{
-                printSlowly("\n[LEAVING GENERATOR...]\n", 80);
+                printSlowly("\n[LEAVING SHOP...]\n", 80);
                 break;
             }
 
@@ -3168,28 +3259,16 @@ public:
         }
         else if(worldt == 4){
             do{
-            printSlowly("\n\n[THE HOLE][" + to_string(Places.Hole) + "]\n", 80);
+            printSlowly("\n\n[THE HOLE][DEPTH:" + to_string(Places.Hole) + "]\n", 80);
             cout << "[1].[FIGHT]" << endl;
-            cout << "[2].[GO DEEPER]" << endl;
-            cout << "[3].[GO BACK UP]" << endl;
-            cout << "[4].[EXIT HOLE]" << endl;
-            int depth = VerifyCin(1, 4);
+            cout << "[2].[EXIT HOLE]" << endl;
+            int depth = VerifyCin(1, 2);
 
             if(depth == 1){
-                FoundEnemy(Places.Hole);
+                FoundEnemy();
                 continue;
             }
             else if(depth == 2){
-                ++Places.Hole;
-                printSlowly("\n[GOING TO LEVEL:" + to_string(Places.Hole)+ "]\n", 80);
-                continue;
-            }
-            else if(depth == 3){
-                Places.Hole = 1;
-                printSlowly("\n[RESETING LEVEL TO:" + to_string(Places.Hole) + "]\n", 80);
-                continue;
-            }
-            else if(depth == 4){
                 printSlowly("\n[LEAVING THE HOLE...]\n", 80);
                 break;
             }
@@ -3199,6 +3278,7 @@ public:
         }
         else{
             printSlowly("\n[LEAVING GAME...]\n", 80);
+            break;
         }
 
 
@@ -3230,13 +3310,16 @@ character YME;
         enter("\nBelial: Don't die too fast...", 100);
         break;
     }
+
     }while(true);
 
-do{
-    YME.TheWorld();
-    break;
 
-}while(true);
+    while(true){
+
+        YME.TheWorld();
+        break;
+
+    }
 
 return 0;
 };
